@@ -1,0 +1,20 @@
+# Local RAG dev workspace - dataset prep, embedding scripts, and Python
+# venvs. None of this is part of the deployed app (see web/). It's large
+# (rag_env/ alone is several GB) and regenerable from unified_dataset.json,
+# so it doesn't belong in the repo.
+data/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Node (web/ has its own, more specific .gitignore; this is a backstop for
+# node_modules created anywhere else, e.g. if scripts are run from repo root)
+node_modules/
+
+# Never commit secrets
+.env
+.env.*
