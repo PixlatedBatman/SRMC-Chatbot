@@ -3,6 +3,7 @@
 # (rag_env/ alone is several GB) and regenerable from unified_dataset.json,
 # so it doesn't belong in the repo.
 data/
+tmp/
 
 # OS / editor cruft
 .DS_Store
