@@ -1,0 +1,262 @@
+:root {
+  --bg: #fbfbfa;
+  --panel: #ffffff;
+  --border: #e4e4e0;
+  --text: #1f1f1d;
+  --muted: #6c6c66;
+  --accent: #1c5d4a;
+  --accent-soft: #eef4f1;
+  --user-bubble: #ececea;
+  --danger: #a6362b;
+  --radius: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17181a;
+    --panel: #1f2023;
+    --border: #33353a;
+    --text: #ececea;
+    --muted: #9a9a96;
+    --accent: #6fbfa3;
+    --accent-soft: #222e2a;
+    --user-bubble: #2a2c30;
+    --danger: #e2867b;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 24px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 24px 20px 0;
+  height: 100dvh;
+}
+
+.sidebar {
+  border-right: 1px solid var(--border);
+  padding-right: 20px;
+}
+
+.sidebar h2 {
+  font-size: 0.95rem;
+  margin: 0 0 8px;
+}
+
+.sidebar p {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding-bottom: 20px;
+}
+
+.chat h1 {
+  font-size: 1.4rem;
+  margin: 0 0 4px;
+}
+
+.caption {
+  color: var(--muted);
+  font-size: 0.875rem;
+  margin: 0 0 16px;
+}
+
+.messages {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.msg {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 46rem;
+}
+
+.msg .role {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.msg .body > :first-child {
+  margin-top: 0;
+}
+
+.msg .body > :last-child {
+  margin-bottom: 0;
+}
+
+.msg.user {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.msg.user .body {
+  background: var(--user-bubble);
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  white-space: pre-wrap;
+}
+
+.msg.assistant .body :is(ul, ol) {
+  padding-left: 1.3em;
+}
+
+.msg.assistant .body code {
+  background: var(--accent-soft);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.msg.assistant .body pre {
+  background: var(--accent-soft);
+  padding: 12px;
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+
+.msg.assistant .body pre code {
+  background: none;
+  padding: 0;
+}
+
+.msg.error .body {
+  color: var(--danger);
+}
+
+.cursor::after {
+  content: "▍";
+  color: var(--muted);
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+details.sources {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  background: var(--panel);
+}
+
+details.sources summary {
+  cursor: pointer;
+  color: var(--muted);
+}
+
+details.sources ul {
+  margin: 8px 0 2px;
+  padding-left: 1.2em;
+}
+
+details.sources a {
+  color: var(--accent);
+}
+
+.composer {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  margin-top: 16px;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+textarea {
+  flex: 1;
+  resize: none;
+  max-height: 180px;
+  font: inherit;
+  color: inherit;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+}
+
+textarea:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  padding: 10px 18px;
+  background: var(--accent);
+  color: #fff;
+}
+
+button.secondary {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text);
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+
+button[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+@media (max-width: 760px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding-top: 16px;
+  }
+
+  .sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 0 0 12px;
+    margin-bottom: 12px;
+  }
+
+  .sidebar p {
+    display: none;
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "srmc-chatbot",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-01",
+  // Required by @anthropic-ai/sdk.
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Static chat UI. Assets are matched before the Worker runs, so the Worker
+  // only ever sees /api/* in practice.
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+
+  // Query-time embeddings (@cf/baai/bge-small-en-v1.5).
+  "ai": {
+    "binding": "AI"
+  },
+
+  "vars": {
+    // Switch to "claude-sonnet-4-6" to match the original Python version.
+    "CLAUDE_MODEL": "claude-opus-5"
+  },
+
+  "observability": {
+    "enabled": true
+  }
+
+  // ANTHROPIC_API_KEY is a secret, not a var:
+  //   npx wrangler secret put ANTHROPIC_API_KEY
+}

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SRMC Chatbot</title>
+    <meta
+      name="description"
+      content="Ask about eligibility, rules, schedule, or past exam questions for the Srinivasa Ramanujan Mathematics Competition."
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📐</text></svg>"
+    />
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>About</h2>
+        <p>
+          This chatbot answers from SRMC's rulebook, website FAQ, and past exam questions only.
+          Rulebook info takes priority over other sources when they disagree.
+        </p>
+        <button id="clear" type="button" class="secondary">Clear conversation</button>
+      </aside>
+
+      <main class="chat">
+        <header>
+          <h1>📐 SRMC Chatbot</h1>
+          <p class="caption">
+            Ask about eligibility, rules, schedule, or past exam questions for the Srinivasa
+            Ramanujan Mathematics Competition.
+          </p>
+        </header>
+
+        <div id="messages" class="messages" aria-live="polite"></div>
+
+        <form id="composer" class="composer">
+          <label class="sr-only" for="input">Ask a question about SRMC</label>
+          <textarea
+            id="input"
+            rows="1"
+            maxlength="4000"
+            placeholder="Ask a question about SRMC..."
+            autocomplete="off"
+          ></textarea>
+          <button id="send" type="submit">Send</button>
+        </form>
+      </main>
+    </div>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>
