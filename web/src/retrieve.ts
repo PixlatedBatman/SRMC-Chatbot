@@ -62,10 +62,14 @@ function normalize(v: Float32Array): Float32Array {
  * applied here and only here - corpus vectors were built from bare passages.
  */
 export async function embedQuery(ai: Ai, question: string): Promise<Float32Array> {
-  // Model name comes from corpus.json so the index and the query can never
-  // reference different models; that also means it isn't a literal type here.
-  const run = ai.run as (model: string, inputs: unknown) => Promise<unknown>;
-  const res = (await run(corpus.embedModel, {
+  // Model name comes from corpus.json, so it isn't a literal `keyof AiModels`
+  // and `ai.run` needs a type cast. Cast `ai` itself, not the extracted
+  // method - `Ai.run` is a class method that keeps state in private fields,
+  // so calling it detached from `ai` (e.g. `const run = ai.run; run(...)`)
+  // loses the `this` binding and throws inside the private-field access.
+  // Casting `ai` and calling `.run(...)` on it keeps the call a method call.
+  const looselyTyped = ai as unknown as { run(model: string, inputs: unknown): Promise<unknown> };
+  const res = (await looselyTyped.run(corpus.embedModel, {
     text: [corpus.queryPrefix + question],
   })) as { data?: number[][] };
 
