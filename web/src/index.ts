@@ -51,6 +51,29 @@ function sse(event: string, data: unknown): string {
   return `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
 }
 
+/**
+ * console.error("label", err) renders unreliably in Workers Logs - observed
+ * cases where only stack frames show and the error's own message is dropped
+ * entirely (e.g. AiError instances, which carry detail in non-standard own
+ * properties rather than a populated `.message`). Dump every own property
+ * into one string so nothing gets lost to the platform's formatting.
+ */
+function describeError(err: unknown): string {
+  if (err instanceof Error) {
+    const props: Record<string, unknown> = {};
+    for (const key of Object.getOwnPropertyNames(err)) {
+      if (key === "stack") continue;
+      props[key] = (err as unknown as Record<string, unknown>)[key];
+    }
+    return JSON.stringify(props);
+  }
+  try {
+    return JSON.stringify(err);
+  } catch {
+    return String(err);
+  }
+}
+
 async function handleChat(request: Request, env: Env): Promise<Response> {
   if (request.method !== "POST") return new Response("Method not allowed", { status: 405 });
   if (!env.ANTHROPIC_API_KEY) return Response.json({ error: "Server is missing ANTHROPIC_API_KEY" }, { status: 500 });
@@ -73,7 +96,7 @@ async function handleChat(request: Request, env: Env): Promise<Response> {
     context = buildContext(top);
     sources = toSources(top);
   } catch (err) {
-    console.error("retrieval failed", err);
+    console.error(`retrieval failed: ${describeError(err)}`);
     return Response.json({ error: "Retrieval failed. Please try again." }, { status: 502 });
   }
 
@@ -110,7 +133,7 @@ async function handleChat(request: Request, env: Env): Promise<Response> {
           send("done", { stop_reason: final.stop_reason });
         }
       } catch (err) {
-        console.error("generation failed", err);
+        console.error(`generation failed: ${describeError(err)}`);
         send("error", { message: "The assistant could not finish that answer. Please try again." });
       } finally {
         controller.close();
